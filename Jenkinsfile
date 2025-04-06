@@ -33,9 +33,14 @@ pipeline {
                     docker stop backun-farm-backend || true
                     docker rm backun-farm-backend || true
                     
+                    if ! docker network inspect myeongri >/dev/null 2>&1; then
+                        docker network create myeongri
+                    fi
+                    
                     docker run -d \
                         --name backun-farm-backend \
                         --restart always \
+                        --network myeongri \
                         -p 8084:8084 \
                         --env-file .env \
                         ${DOCKER_IMAGE}:${DOCKER_TAG}
