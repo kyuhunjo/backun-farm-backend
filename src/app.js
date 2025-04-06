@@ -36,6 +36,14 @@ const app = express();
 
 // 미들웨어 설정
 app.use(express.json());
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:4173', 'http://localhost:3000', 
+          'http://172.30.1.14:8084', 'http://172.30.1.14', 'http://backun-farm-frontend:8083',
+          'http://backun-farm-frontend'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -55,7 +63,6 @@ app.use(helmet({
   crossOriginResourcePolicy: false,
 }));
 app.use(compression());
-app.use(cors());
 
 // 라우터 설정
 app.use('/api', weatherRoutes);
