@@ -1,0 +1,27 @@
+{
+  "name": "farm-server",
+  "version": "1.0.0",
+  "description": "스마트 팜 백엔드 서버",
+  "type": "module",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
+    "mongoose": "^8.1.1",
+    "multer": "^1.4.5-lts.1",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.3"
+  }
+} 
