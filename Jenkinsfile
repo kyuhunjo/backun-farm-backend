@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'backun-farm-backend'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
-        DOCKER_CREDENTIALS = credentials('docker-hub-credentials')
         WEATHER_API_KEY = credentials('weather-api-key')
         AIR_KOREA_API_KEY = credentials('air-korea-api-key')
         MONGODB_URI = credentials('mongodb-uri')
@@ -31,21 +30,7 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
-                script {
-                    // 프로덕션 이미지 빌드
-                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-                }
-            }
-        }
-        
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
-                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push('latest')
-                    }
-                }
+                sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
             }
         }
         
@@ -62,10 +47,10 @@ pipeline {
                     """
                     
                     // 기존 컨테이너 중지 및 제거
-                    sh '''
+                    sh """
                         docker stop ${DOCKER_IMAGE} || true
                         docker rm ${DOCKER_IMAGE} || true
-                    '''
+                    """
                     
                     // 새 컨테이너 실행
                     sh """
@@ -83,8 +68,9 @@ pipeline {
     
     post {
         always {
-            // 작업 완료 후 정리
-            cleanWs()
+            node {
+                cleanWs()
+            }
         }
         success {
             echo '배포가 성공적으로 완료되었습니다!'
