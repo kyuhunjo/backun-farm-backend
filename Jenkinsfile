@@ -64,14 +64,15 @@ pipeline {
                 }
             }
         }
-    }
-    
-    post {
-        always {
-            node {
+        
+        stage('Cleanup') {
+            steps {
                 cleanWs()
             }
         }
+    }
+    
+    post {
         success {
             echo '배포가 성공적으로 완료되었습니다!'
         }
