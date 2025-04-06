@@ -10,13 +10,15 @@ import cors from 'cors';
 // 라우터 임포트
 import weatherRoutes from './routes/weather.js';
 import sensorRoutes from './routes/sensor.js';
+import excelRoutes from './routes/excel.js';
+import localFoodRoutes from './routes/localFood.js';
 
 // .env 파일 로딩
 dotenv.config();
 
 // 환경변수 설정
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/farm';
-const PORT = process.env.PORT || 8083;
+const PORT = process.env.PORT || 8086;
 
 // MongoDB 연결
 mongoose.connect(MONGODB_URI)
@@ -67,6 +69,8 @@ app.use(compression());
 // 라우터 설정
 app.use('/api', weatherRoutes);
 app.use('/api', sensorRoutes);
+app.use('/api', excelRoutes);
+app.use('/api', localFoodRoutes);
 
 // 헬스체크
 app.get('/api/health', (req, res) => {

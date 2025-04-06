@@ -15,6 +15,10 @@ console.log('Air Korea API Key loaded:', AIR_KOREA_API_KEY ? '설정됨' : '설�
 
 export const getWeather = async (req, res) => {
   try {
+    if (!WEATHER_API_KEY) {
+      throw new Error('Weather API 키가 설정되지 않았습니다');
+    }
+
     const lat = '35.0519';
     const lon = '126.9918';
     
@@ -70,6 +74,10 @@ export const getWeather = async (req, res) => {
 
 export const getForecast = async (req, res) => {
   try {
+    if (!WEATHER_API_KEY) {
+      throw new Error('Weather API 키가 설정되지 않았습니다');
+    }
+
     const lat = '35.0519';
     const lon = '126.9918';
     
@@ -173,12 +181,11 @@ export const getForecast = async (req, res) => {
 
 export const getAirQuality = async (req, res) => {
   try {
-    const today = new Date().toISOString().split('T')[0];
     if (!AIR_KOREA_API_KEY) {
-      console.error('Air Korea API 키가 설정되지 않았습니다.');
-      throw new Error('API 키가 설정되지 않았습니다');
+      throw new Error('Air Korea API 키가 설정되지 않았습니다');
     }
-    
+
+    const today = new Date().toISOString().split('T')[0];
     const encodedKey = encodeURIComponent(AIR_KOREA_API_KEY);
     const url = `https://apis.data.go.kr/6460000/rest/jnRealTimeAirQual/getAirObserveResult?serviceKey=${encodedKey}&zone=화순군&name=화순읍&date=${today}`;
     
