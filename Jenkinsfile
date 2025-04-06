@@ -34,13 +34,15 @@ pipeline {
                 script {
                     try {
                         sh 'docker network inspect myeongri || docker network create myeongri'
+                        sh 'netstat -ano | grep :8084 || true'
+                        sh 'fuser -k 8084/tcp || true'
                         sh "docker stop backun-farm-backend || true"
                         sh "docker rm backun-farm-backend || true"
                         sh """
                             docker run -d \
                             --name backun-farm-backend \
                             --network myeongri \
-                            -p 8083:8083 \
+                            -p 8084:8084 \
                             -e MONGODB_URI=${env.MONGODB_URI} \
                             -e WEATHER_API_KEY=${env.WEATHER_API_KEY} \
                             -e AIR_KOREA_API_KEY=${env.AIR_KOREA_API_KEY} \
