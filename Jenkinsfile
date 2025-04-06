@@ -7,12 +7,19 @@ pipeline {
         WEATHER_API_KEY = credentials('weather-api-key')
         AIR_KOREA_API_KEY = credentials('air-korea-api-key')
         MONGODB_URI = credentials('mongodb-uri')
+        DOCKER_CREDENTIALS = credentials('docker-hub-credentials')
     }
     
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+        
+        stage('Docker Login') {
+            steps {
+                sh 'echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin'
             }
         }
         
@@ -51,6 +58,7 @@ pipeline {
         stage('Cleanup') {
             steps {
                 cleanWs()
+                sh 'docker logout'
             }
         }
     }
