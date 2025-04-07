@@ -185,11 +185,10 @@ export const getAirQuality = async (req, res) => {
       throw new Error('Air Korea API 키가 설정되지 않았습니다');
     }
 
-    const today = new Date().toISOString().split('T')[0];
     const encodedKey = encodeURIComponent(AIR_KOREA_API_KEY);
-    const url = `https://apis.data.go.kr/6460000/rest/jnRealTimeAirQual/getAirObserveResult?serviceKey=${encodedKey}&zone=화순군&name=화순읍&date=${today}`;
+    const url = `http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?serviceKey=${encodedKey}&returnType=xml&numOfRows=100&pageNo=1&sidoName=전남&ver=1.0`;
     
-    console.log('대기질 API 요청 URL:', url.replace(encodedKey, '**********'));
+    console.log('대기질 API 요청:', { sidoName: '전남' });
     const response = await axios.get(url);
     
     if (!response.data) {
@@ -202,7 +201,10 @@ export const getAirQuality = async (req, res) => {
     
     const items = jsonData.response?.body?.[0]?.items?.[0]?.item || [];
     console.log('추출된 items:', items);
-    const targetData = Array.isArray(items) ? items[0] : items;
+    
+    const targetData = Array.isArray(items) ? 
+      items.find(item => item.stationName?.[0] === '화순읍') : 
+      items;
 
     if (!targetData) {
       console.log('화순읍 측정소 데이터가 없어 기본값을 반환합니다.');
@@ -223,17 +225,17 @@ export const getAirQuality = async (req, res) => {
     }
 
     const result = {
-      pm10Value: targetData.pm10?.[0]?.toString() || '0',
-      pm25Value: targetData.pm25?.[0]?.toString() || '0',
-      pm10Grade: getPM10Grade(parseFloat(targetData.pm10?.[0]) || 0),
-      pm25Grade: getPM25Grade(parseFloat(targetData.pm25?.[0]) || 0),
-      o3Value: targetData.o3?.[0]?.toString() || '0',
-      coValue: targetData.co?.[0]?.toString() || '0',
-      no2Value: targetData.no2?.[0]?.toString() || '0',
-      so2Value: targetData.so2?.[0]?.toString() || '0',
-      stationName: '화순읍',
-      dataTime: targetData.observeDate?.[0] || new Date().toISOString().slice(0, 19).replace('T', ' '),
-      sidoName: '전남'
+      pm10Value: targetData.pm10Value?.[0]?.toString() || '0',
+      pm25Value: targetData.pm25Value?.[0]?.toString() || '0',
+      pm10Grade: targetData.pm10Grade?.[0]?.toString() || '1',
+      pm25Grade: targetData.pm25Grade?.[0]?.toString() || '1',
+      o3Value: targetData.o3Value?.[0]?.toString() || '0',
+      coValue: targetData.coValue?.[0]?.toString() || '0',
+      no2Value: targetData.no2Value?.[0]?.toString() || '0',
+      so2Value: targetData.so2Value?.[0]?.toString() || '0',
+      stationName: targetData.stationName?.[0] || '화순읍',
+      dataTime: targetData.dataTime?.[0] || new Date().toISOString().slice(0, 19).replace('T', ' '),
+      sidoName: targetData.sidoName?.[0] || '전남'
     };
 
     Object.keys(result).forEach(key => {

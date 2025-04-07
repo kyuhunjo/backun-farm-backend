@@ -1,0 +1,29 @@
+[33mcommit 9486385719615ae278c201640104aee6894d6488[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: kyuhun <joe24@naver.com>
+Date:   Sun Apr 6 13:21:32 2025 +0900
+
+    CORS 설정에 프로덕션 도메인 추가
+
+[33mcommit 838cd10129d2d615a702de10f91be43143516ca2[m
+Author: kyuhun <joe24@naver.com>
+Date:   Sun Apr 6 12:06:15 2025 +0900
+
+    Jenkins 파이프라인의 포트를 8084로 변경
+
+[33mcommit 590d85ee49d0fa5813cda74787a717a957e929e2[m
+Author: kyuhun <joe24@naver.com>
+Date:   Sun Apr 6 12:04:44 2025 +0900
+
+    Jenkins 파이프라인에 모든 자격 증명 복원
+
+[33mcommit 84351fd3485db42f265b256de16f201345599d50[m
+Author: kyuhun <joe24@naver.com>
+Date:   Sun Apr 6 12:02:15 2025 +0900
+
+    Docker 컨테이너 주소를 CORS origin에 추가
+
+[33mcommit 5dc59deb3673db09e5e6e5da6110560f8ac7a5fe[m
+Author: kyuhun <joe24@naver.com>
+Date:   Sun Apr 6 11:57:45 2025 +0900
+
+    Jenkins 파이프라인에 Docker Hub 자격 증명 추가
