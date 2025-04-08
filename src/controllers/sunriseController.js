@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const parseXML = promisify(parseString);
-const SUNRISE_API_KEY = 'W9GmSEg%2FBSdoca%2Brts1W4fbMpUJSCM65KgE118Xd4OOrqFbItJ5vDiRxBOQOzmX1AWGNR8aQV5xr7W3SYQCiRg%3D%3D';
+const SUNRISE_API_KEY = process.env.SUNRISE_API_KEY;
 
 export const getSunriseSunset = async (req, res) => {
   try {
@@ -23,7 +23,9 @@ export const getSunriseSunset = async (req, res) => {
       }
       locdate = date;
     } else {
-      locdate = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const now = new Date();
+      now.setHours(now.getHours() + 9); // UTC를 KST로 변환
+      locdate = now.toISOString().slice(0, 10).replace(/-/g, '');
     }
 
     // 기본 위치 (화순읍)

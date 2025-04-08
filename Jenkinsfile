@@ -8,6 +8,7 @@ pipeline {
         WEATHER_API_KEY = credentials('weather-api-key')
         AIR_KOREA_API_KEY = credentials('air-korea-api-key')
         MONGODB_URI = credentials('mongodb-uri')
+        SUNRISE_API_KEY = credentials('sunrise-api-key')
     }
     
     stages {
