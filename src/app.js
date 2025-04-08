@@ -13,6 +13,7 @@ import excelRoutes from './routes/excel.js';
 import localFoodRoutes from './routes/localFood.js';
 import weatherRoutes from './routes/weatherRoutes.js';
 import airQualityRoutes from './routes/airQualityRoutes.js';
+import sunriseRoutes from './routes/sunriseRoutes.js';
 
 // .env 파일 로딩
 dotenv.config();
@@ -73,6 +74,7 @@ app.use('/api/excel', excelRoutes);
 app.use('/api/local-food', localFoodRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/air-quality', airQualityRoutes);
+app.use('/api/sunrise', sunriseRoutes);
 
 // 헬스체크
 app.get('/api/health', (req, res) => {
