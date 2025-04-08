@@ -47,6 +47,7 @@ pipeline {
                             -e MONGODB_URI=${env.MONGODB_URI} \
                             -e WEATHER_API_KEY=${env.WEATHER_API_KEY} \
                             -e AIR_KOREA_API_KEY=${env.AIR_KOREA_API_KEY} \
+                            -e SUNRISE_API_KEY=${env.SUNRISE_API_KEY} \
                             ${DOCKER_IMAGE}:${DOCKER_TAG}
                         """
                     } catch (Exception e) {
