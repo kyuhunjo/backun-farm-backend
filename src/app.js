@@ -8,10 +8,11 @@ import multer from 'multer';
 import cors from 'cors';
 
 // 라우터 임포트
-import weatherRoutes from './routes/weather.js';
 import sensorRoutes from './routes/sensor.js';
 import excelRoutes from './routes/excel.js';
 import localFoodRoutes from './routes/localFood.js';
+import weatherRoutes from './routes/weatherRoutes.js';
+import airQualityRoutes from './routes/airQualityRoutes.js';
 
 // .env 파일 로딩
 dotenv.config();
@@ -67,10 +68,11 @@ app.use(helmet({
 app.use(compression());
 
 // 라우터 설정
-app.use('/api', weatherRoutes);
-app.use('/api', sensorRoutes);
-app.use('/api', excelRoutes);
-app.use('/api', localFoodRoutes);
+app.use('/api/sensor', sensorRoutes);
+app.use('/api/excel', excelRoutes);
+app.use('/api/local-food', localFoodRoutes);
+app.use('/api/weather', weatherRoutes);
+app.use('/api/air-quality', airQualityRoutes);
 
 // 헬스체크
 app.get('/api/health', (req, res) => {
