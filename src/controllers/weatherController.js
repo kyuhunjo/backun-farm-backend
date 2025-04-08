@@ -10,8 +10,8 @@ const parseXML = promisify(parseString);
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 const AIR_KOREA_API_KEY = process.env.AIR_KOREA_API_KEY;
 
-console.log('Weather API Key loaded:', WEATHER_API_KEY ? '설정됨' : '설정되지 않음');
-console.log('Air Korea API Key loaded:', AIR_KOREA_API_KEY ? '설정됨' : '설정되지 않음');
+console.log('Weather API Key:', WEATHER_API_KEY ? '설정됨' : '설정되지 않음');
+console.log('Air Korea API Key:', AIR_KOREA_API_KEY ? '설정됨' : '설정되지 않음');
 
 export const getWeather = async (req, res) => {
   try {
@@ -28,21 +28,28 @@ export const getWeather = async (req, res) => {
     ]);
     
     if (currentWeather.data) {
-      const date = new Date(currentWeather.data.dt * 1000);
-      const kstDate = new Date(date.getTime() + (9 * 60 * 60 * 1000));
+      // UTC 시간을 KST로 변환
+      const utcDate = new Date(currentWeather.data.dt * 1000);
+      const kstDate = new Date(utcDate.getTime() + (9 * 60 * 60 * 1000));
+      
+      // KST 기준으로 오늘 자정 설정
+      const today = new Date(kstDate);
+      today.setHours(0, 0, 0, 0);
+      today.setTime(today.getTime() - (9 * 60 * 60 * 1000)); // UTC로 변환
+      
+      // KST 기준으로 내일 자정 설정
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
       
       let todayMin = currentWeather.data.main.temp;
       let todayMax = currentWeather.data.main.temp;
       
       if (forecastData.data && forecastData.data.list) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        
         forecastData.data.list.forEach(item => {
-          const itemDate = new Date(item.dt * 1000);
-          if (itemDate >= today && itemDate < tomorrow) {
+          const itemUtcDate = new Date(item.dt * 1000);
+          const itemKstDate = new Date(itemUtcDate.getTime() + (9 * 60 * 60 * 1000));
+          
+          if (itemKstDate >= today && itemKstDate < tomorrow) {
             todayMin = Math.min(todayMin, item.main.temp);
             todayMax = Math.max(todayMax, item.main.temp);
           }
@@ -59,8 +66,25 @@ export const getWeather = async (req, res) => {
         windDirection: currentWeather.data.wind.deg,
         description: currentWeather.data.weather[0].description,
         icon: currentWeather.data.weather[0].icon,
-        timestamp: kstDate.toISOString()
+        timestamp: kstDate.toISOString(),
+        kstDateTime: new Intl.DateTimeFormat('ko-KR', {
+          timeZone: 'Asia/Seoul',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        }).format(utcDate)
       };
+      
+      console.log('날씨 데이터 시간 정보:', {
+        현재UTC시간: utcDate.toISOString(),
+        현재KST시간: kstDate.toISOString(),
+        변환된시간: weatherData.kstDateTime,
+        오늘자정: today.toISOString(),
+        내일자정: tomorrow.toISOString()
+      });
       
       res.json(weatherData);
     } else {
@@ -90,26 +114,27 @@ export const getForecast = async (req, res) => {
       const tempData = {};
       
       const now = new Date();
-      const today = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        0, 0, 0, 0
-      );
+      const kstNow = new Date(now.getTime() + (9 * 60 * 60 * 1000));
       
+      // KST 기준으로 오늘 자정 설정
+      const today = new Date(kstNow);
+      today.setHours(0, 0, 0, 0);
+      today.setTime(today.getTime() - (9 * 60 * 60 * 1000)); // UTC로 변환
+      
+      // KST 기준으로 내일 자정 설정
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      
+      console.log('시간 정보:', {
+        현재UTC: now.toISOString(),
+        현재KST: kstNow.toISOString(),
+        오늘자정KST: today.toISOString(),
+        내일자정KST: tomorrow.toISOString()
+      });
+
       response.data.list.forEach(item => {
-        const date = new Date(item.dt * 1000);
-        const kstDate = new Date(date.getTime() + (9 * 60 * 60 * 1000));
-        
-        const kstDateOnly = new Date(
-          kstDate.getFullYear(),
-          kstDate.getMonth(),
-          kstDate.getDate()
-        );
-        
-        if (kstDateOnly.getTime() <= today.getTime()) {
-          return;
-        }
+        const itemUtcDate = new Date(item.dt * 1000);
+        const kstDate = new Date(itemUtcDate.getTime() + (9 * 60 * 60 * 1000));
         
         const dateKey = kstDate.toISOString().split('T')[0];
         const hours = kstDate.getHours();
@@ -133,6 +158,15 @@ export const getForecast = async (req, res) => {
           tempData[dateKey].noonTemp = currentTemp;
           tempData[dateKey].noonData = {
             dt: item.dt,
+            kstDateTime: new Intl.DateTimeFormat('ko-KR', {
+              timeZone: 'Asia/Seoul',
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false
+            }).format(kstDate),
             humidity: item.main.humidity,
             weather: item.weather,
             wind: item.wind,
@@ -145,6 +179,7 @@ export const getForecast = async (req, res) => {
         if (data.noonData) {
           dailyData[dateKey] = {
             dt: data.noonData.dt,
+            kstDateTime: data.noonData.kstDateTime,
             main: {
               temp: data.noonTemp,
               temp_min: Math.round(data.minTemp * 10) / 10,
@@ -168,6 +203,11 @@ export const getForecast = async (req, res) => {
         .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
         .slice(0, 5)
         .map(([, data]) => data);
+      
+      console.log('예보 데이터 응답:', sortedData.map(data => ({
+        date: new Date(data.dt * 1000).toISOString(),
+        kst: data.kstDateTime
+      })));
       
       res.json(sortedData);
     } else {
