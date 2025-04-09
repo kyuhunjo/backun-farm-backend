@@ -41,9 +41,19 @@ const app = express();
 // 미들웨어 설정
 app.use(express.json());
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:4173', 'http://localhost:3000', 
-          'http://172.30.1.14:8084', 'http://172.30.1.14', 'http://backun-farm-frontend:8083',
-          'http://backun-farm-frontend', 'https://hs.imjoe24.com', 'https://hs-api.imjoe24.com'],
+  origin: [
+    'http://localhost:5173', 
+    'http://localhost:4173', 
+    'http://localhost:3000', 
+    'http://172.30.1.14:8084', 
+    'http://172.30.1.14', 
+    'http://backun-farm-frontend:8083',
+    'http://backun-farm-frontend', 
+    'https://hs.imjoe24.com', 
+    'https://hs-api.imjoe24.com',
+    'http://hs.imjoe24.com',
+    'http://hs-api.imjoe24.com'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
