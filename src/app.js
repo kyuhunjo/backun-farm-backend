@@ -15,6 +15,8 @@ import weatherRoutes from './routes/weatherRoutes.js';
 import airQualityRoutes from './routes/airQualityRoutes.js';
 import sunriseRoutes from './routes/sunriseRoutes.js';
 import mafraRoutes from './routes/mafraRoutes.js';
+import welfareFacilityRoutes from './routes/welfareFacilityRoutes.js';
+import facilityRoutes from './routes/facilityRoutes.js';
 
 // .env 파일 로딩
 dotenv.config();
@@ -87,6 +89,8 @@ app.use('/api/weather', weatherRoutes);
 app.use('/api/air-quality', airQualityRoutes);
 app.use('/api/sunrise', sunriseRoutes);
 app.use('/api/mafra', mafraRoutes);
+app.use('/api/welfare', welfareFacilityRoutes);
+app.use('/api/facilities', facilityRoutes);
 
 // 헬스체크
 app.get('/api/health', (req, res) => {
@@ -96,4 +100,6 @@ app.get('/api/health', (req, res) => {
 // 서버 시작
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`API 서버가 포트 ${PORT}에서 실행 중입니다.`);
-}); 
+});
+
+export default app; 
