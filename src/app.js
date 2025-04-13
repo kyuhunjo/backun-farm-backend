@@ -58,7 +58,7 @@ app.use(cors({
     'http://hs.imjoe24.com',
     'http://hs-api.imjoe24.com'
   ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
