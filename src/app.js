@@ -17,6 +17,7 @@ import sunriseRoutes from './routes/sunriseRoutes.js';
 import mafraRoutes from './routes/mafraRoutes.js';
 import welfareFacilityRoutes from './routes/welfareFacilityRoutes.js';
 import facilityRoutes from './routes/facilityRoutes.js';
+import jobPostingRoutes from './routes/jobPostingRoutes.js';
 
 // .env 파일 로딩
 dotenv.config();
@@ -91,6 +92,7 @@ app.use('/api/sunrise', sunriseRoutes);
 app.use('/api/mafra', mafraRoutes);
 app.use('/api/welfare', welfareFacilityRoutes);
 app.use('/api/facilities', facilityRoutes);
+app.use('/api/jobs', jobPostingRoutes);
 
 // 헬스체크
 app.get('/api/health', (req, res) => {
