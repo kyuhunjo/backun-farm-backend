@@ -44,7 +44,7 @@ export const getAirQuality = async (req, res) => {
     }
 
     const items = result.response.body[0].items[0].item;
-    const hwasunData = items.find(item => item.stationName[0] === '화순읍');
+    const hwasunData = items.find(item => item.stationName[0] === '광주');
 
     if (hwasunData) {
       responseData.items = [{

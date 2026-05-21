@@ -17,8 +17,8 @@ export const getWeather = async (req, res) => {
       throw new Error('Weather API 키가 설정되지 않았습니다');
     }
 
-    const lat = '35.0519';
-    const lon = '126.9918';
+    const lat = "35.1600";
+    const lon = "126.8500";
     
     const [currentWeather, forecastData] = await Promise.all([
       axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric&lang=kr`),
@@ -100,8 +100,8 @@ export const getForecast = async (req, res) => {
       throw new Error('Weather API 키가 설정되지 않았습니다');
     }
 
-    const lat = '35.0519';
-    const lon = '126.9918';
+    const lat = "35.1600";
+    const lon = "126.8500";
     
     const response = await axios.get(
       `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric&lang=kr`

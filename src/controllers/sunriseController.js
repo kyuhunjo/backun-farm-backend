@@ -28,9 +28,9 @@ export const getSunriseSunset = async (req, res) => {
       locdate = now.toISOString().slice(0, 10).replace(/-/g, '');
     }
 
-    // 기본 위치 (화순읍)
-    let defaultLongitude = '126.9918';  // 경도
-    let defaultLatitude = '35.0519';    // 위도
+    // 기본 위치 (광주)
+    let defaultLongitude = "126.8500";  // 경도
+    let defaultLatitude = "35.1600";    // 위도
 
     // 위도/경도 파라미터 처리
     let lon = longitude || defaultLongitude;
